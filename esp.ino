@@ -62,6 +62,9 @@ void setup() {
   server.on("/get", HTTP_GET, [] (AsyncWebServerRequest *request) {
     int newColor;
     blink = false; 
+    R = 0; 
+    G = 0; 
+    B = 0; 
     if (request->hasParam(PARAM_INPUT_1)) {
       newColor = request->getParam(PARAM_INPUT_1)->value().toInt();
       R = newColor % 256; 
