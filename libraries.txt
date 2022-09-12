@@ -1,0 +1,5 @@
+# Wokwi Library List
+# See https://docs.wokwi.com/guides/libraries
+
+ESPAsyncWebServer@wokwi:f4d9a10739aeda58552508c436466e1192bae3c0
+AsyncTCP@wokwi:4b479150f3e26210c8b06977b8aa6ab306e5e042
