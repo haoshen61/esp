@@ -8,6 +8,7 @@ AsyncWebServer server(80);
 int R = 0; 
 int G = 0; 
 int B = 0; 
+bool validRGB = true;
 
 char* PARAM_INPUT_1 = "red";
 char* PARAM_INPUT_2 = "green";
@@ -64,17 +65,20 @@ void setup() {
     if (request->hasParam(PARAM_INPUT_1)) {
       inputMessage = request->getParam(PARAM_INPUT_1)->value();
       inputParam = PARAM_INPUT_1;
-      R = inputMessage.toInt(); 
+      R = inputMessage.toInt();
+      validRGB = isRGB(R);
     }
     if (request->hasParam(PARAM_INPUT_2)) {
       inputMessage = request->getParam(PARAM_INPUT_2)->value();
       inputParam = PARAM_INPUT_2;
       G = inputMessage.toInt(); 
+      validRGB = isRGB(G);
     }
     if (request->hasParam(PARAM_INPUT_3)) {
       inputMessage = request->getParam(PARAM_INPUT_3)->value();
       inputParam = PARAM_INPUT_3;
-      B = inputMessage.toInt(); 
+      B = inputMessage.toInt();
+      validRGB = isRGB(B);
     }
     else {
       inputMessage = "No message sent";
@@ -85,6 +89,12 @@ void setup() {
   server.onNotFound(notFound);
   server.begin();
 }
+
+
+bool isRGB(const int & rgb) {
+  return (rgb>=0 && rgb<=255);
+}
+
 
 void loop() {
   analogWrite(23, R);
