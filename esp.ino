@@ -8,7 +8,7 @@ AsyncWebServer server(80);
 int R = 0; 
 int G = 0; 
 int B = 0; 
-bool validRGB = true;
+bool blink; 
 
 char* PARAM_INPUT_1 = "red";
 char* PARAM_INPUT_2 = "green";
@@ -60,29 +60,28 @@ void setup() {
   });
 
   server.on("/get", HTTP_GET, [] (AsyncWebServerRequest *request) {
-    String inputMessage;
-    String inputParam;
+    int newColor;
+    blink = false; 
     if (request->hasParam(PARAM_INPUT_1)) {
-      inputMessage = request->getParam(PARAM_INPUT_1)->value();
-      inputParam = PARAM_INPUT_1;
-      R = inputMessage.toInt();
-      validRGB = isRGB(R);
+      newColor = request->getParam(PARAM_INPUT_1)->value().toInt();
+      R = newColor % 256; 
+      if (newColor < 0 || newColor > 255) {
+        blink = true; 
+      }
     }
     if (request->hasParam(PARAM_INPUT_2)) {
-      inputMessage = request->getParam(PARAM_INPUT_2)->value();
-      inputParam = PARAM_INPUT_2;
-      G = inputMessage.toInt(); 
-      validRGB = isRGB(G);
+      newColor = request->getParam(PARAM_INPUT_2)->value().toInt();
+      G = newColor % 256; 
+      if (newColor < 0 || newColor > 255) {
+        blink = true; 
+      }
     }
     if (request->hasParam(PARAM_INPUT_3)) {
-      inputMessage = request->getParam(PARAM_INPUT_3)->value();
-      inputParam = PARAM_INPUT_3;
-      B = inputMessage.toInt();
-      validRGB = isRGB(B);
-    }
-    else {
-      inputMessage = "No message sent";
-      inputParam = "none";
+      newColor = request->getParam(PARAM_INPUT_3)->value().toInt();
+      B = newColor % 256; 
+      if (newColor < 0 || newColor > 255) {
+        blink = true; 
+      }
     }
     request->send(200, "text/html", "<br><a href=\"/\">Return to Home Page</a>");
   });
@@ -90,15 +89,15 @@ void setup() {
   server.begin();
 }
 
-
-bool isRGB(const int & rgb) {
-  return (rgb>=0 && rgb<=255);
-}
-
-
 void loop() {
   analogWrite(23, R);
   analogWrite(22, G);
   analogWrite(21, B);
   delay(1000); 
+  if (blink) {
+    analogWrite(23, 0);
+    analogWrite(22, 0);
+    analogWrite(21, 0);
+    delay(1000); 
+  }
 }
